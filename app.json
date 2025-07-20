@@ -1,0 +1,71 @@
+{
+  "expo": {
+    "name": "LayOver",
+    "slug": "layover-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "layover-app",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.layover.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses location to find nearby attractions and provide accurate travel times.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location to find nearby attractions and provide accurate travel times.",
+        "NSCameraUsageDescription": "This app uses camera to capture photos of your layover experiences.",
+        "NSPhotoLibraryUsageDescription": "This app uses photo library to save and share your layover experiences."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.layover.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-location",
+      "expo-secure-store",
+      "expo-font",
+      "expo-splash-screen",
+
+      "expo-av",
+      "expo-haptics",
+      "expo-device",
+      "expo-network",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+} 
