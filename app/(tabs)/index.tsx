@@ -6,6 +6,7 @@ import { useFlight } from '@/context/FlightContext';
 import { useUser } from '@/context/UserContext';
 import { Colors } from '@/constants/Colors';
 import { Layout } from '@/constants/Layout';
+import { RetroIcon } from '@/components/RetroIcons';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -20,31 +21,46 @@ export default function HomeScreen() {
     router.push('/(tabs)/itinerary');
   };
 
+  const handleSearchAttractions = () => {
+    router.push('/(tabs)/search');
+  };
+
+  const handleViewItineraries = () => {
+    router.push('/(tabs)/itinerary');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {/* Header */}
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Editorial Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>LayOver</Text>
-          <Text style={styles.subtitle}>Transform your layover into an adventure</Text>
+          <Text style={styles.masthead}>ITINEREADY</Text>
+          <Text style={styles.tagline}>TRANSFORM YOUR LAYOVER INTO AN ADVENTURE</Text>
+          <View style={styles.headerAccent} />
         </View>
 
         {/* Welcome Section */}
         {userState.currentUser && (
           <View style={styles.welcomeSection}>
             <Text style={styles.welcomeText}>
-              Welcome back, {userState.currentUser.name}!
+              WELCOME BACK, {userState.currentUser.name.toUpperCase()}!
             </Text>
           </View>
         )}
 
-        {/* Flight Status */}
+        {/* Flight Status Card */}
         {flightState.currentFlight ? (
           <View style={styles.flightCard}>
-            <Text style={styles.cardTitle}>Current Flight</Text>
+            <View style={styles.cardHeader}>
+              <View style={styles.cardTitleRow}>
+                <RetroIcon name="plane" size={24} color={Colors.editorial.coral} />
+                <Text style={styles.cardTitle}>CURRENT FLIGHT</Text>
+              </View>
+              <View style={styles.editorialAccent} />
+            </View>
             <View style={styles.flightInfo}>
               <Text style={styles.flightText}>
-                Layover in {flightState.currentFlight.layoverCity.code}
+                LAYOVER IN {flightState.currentFlight.layoverCity.code}
               </Text>
               <Text style={styles.timeText}>
                 {flightState.currentFlight.arrivalTime.toLocaleTimeString()} - {flightState.currentFlight.departureTime.toLocaleTimeString()}
@@ -52,67 +68,79 @@ export default function HomeScreen() {
               {flightState.timeCalculation && (
                 <View style={styles.timeCalculation}>
                   <Text style={styles.usableTime}>
-                    Usable Time: {Math.floor(flightState.timeCalculation.usableTime / 60)}h {flightState.timeCalculation.usableTime % 60}m
+                    USABLE TIME: {Math.floor(flightState.timeCalculation.usableTime / 60)}H {flightState.timeCalculation.usableTime % 60}M
                   </Text>
                   {flightState.timeCalculation.warnings.map((warning, index) => (
-                    <Text key={index} style={styles.warning}>
-                      ⚠️ {warning}
-                    </Text>
+                    <View key={index} style={styles.warningRow}>
+                      <RetroIcon name="warning" size={16} color={Colors.editorial.coral} />
+                      <Text style={styles.warning}>{warning.toUpperCase()}</Text>
+                    </View>
                   ))}
                 </View>
               )}
             </View>
-            <TouchableOpacity style={styles.button} onPress={handleViewItinerary}>
-              <Text style={styles.buttonText}>View Itinerary</Text>
+            <TouchableOpacity style={styles.primaryButton} onPress={handleViewItinerary}>
+              <Text style={styles.primaryButtonText}>VIEW ITINERARY</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyTitle}>No Flight Added</Text>
+            <View style={styles.cardHeader}>
+              <View style={styles.cardTitleRow}>
+                <RetroIcon name="plane" size={24} color={Colors.editorial.coral} />
+                <Text style={styles.cardTitle}>NO FLIGHT ADDED</Text>
+              </View>
+            </View>
+            <View style={styles.editorialAccent} />
             <Text style={styles.emptySubtitle}>
-              Add your flight details to start planning your layover adventure
+              ADD YOUR FLIGHT DETAILS TO START PLANNING YOUR LAYOVER ADVENTURE
             </Text>
-            <TouchableOpacity style={styles.button} onPress={handleAddFlight}>
-              <Text style={styles.buttonText}>Add Flight</Text>
+            <TouchableOpacity style={styles.primaryButton} onPress={handleAddFlight}>
+              <Text style={styles.primaryButtonText}>+ ADD FLIGHT</Text>
             </TouchableOpacity>
           </View>
         )}
 
-        {/* Quick Actions */}
-        <View style={styles.quickActions}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
+        {/* Main Action Grid */}
+        <View style={styles.actionSection}>
+          <Text style={styles.sectionTitle}>QUICK ACTIONS</Text>
           <View style={styles.actionGrid}>
-            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/search')}>
-              <Text style={styles.actionTitle}>Search Places</Text>
-              <Text style={styles.actionSubtitle}>Find attractions near your layover</Text>
+            <TouchableOpacity style={styles.actionButton} onPress={handleSearchAttractions}>
+              <RetroIcon name="search" size={32} color={Colors.editorial.skyBlue} />
+              <Text style={styles.actionButtonText}>SEARCH NEARBY ATTRACTIONS</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/itinerary')}>
-              <Text style={styles.actionTitle}>My Itineraries</Text>
-              <Text style={styles.actionSubtitle}>View saved itineraries</Text>
+            <TouchableOpacity style={styles.actionButton} onPress={handleViewItineraries}>
+              <RetroIcon name="trips" size={32} color={Colors.editorial.coral} />
+              <Text style={styles.actionButtonText}>VIEW MY ITINERARIES</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Tips Section */}
+        {/* Editorial Tips Section */}
         <View style={styles.tipsSection}>
-          <Text style={styles.sectionTitle}>Layover Tips</Text>
-          <View style={styles.tipCard}>
-            <Text style={styles.tipTitle}>💡 Plan Ahead</Text>
-            <Text style={styles.tipText}>
-              Research your layover city before you arrive to make the most of your time.
-            </Text>
-          </View>
-          <View style={styles.tipCard}>
-            <Text style={styles.tipTitle}>⏰ Time Management</Text>
-            <Text style={styles.tipText}>
-              Always allow extra time for security and travel back to the airport.
-            </Text>
-          </View>
-          <View style={styles.tipCard}>
-            <Text style={styles.tipTitle}>🎒 Travel Light</Text>
-            <Text style={styles.tipText}>
-              Consider luggage storage at the airport if you plan to explore extensively.
-            </Text>
+          <Text style={styles.sectionTitle}>TRAVEL TIPS</Text>
+          <View style={styles.tipsGrid}>
+            <View style={styles.tipCard}>
+              <RetroIcon name="calendar" size={28} color={Colors.editorial.brightYellow} />
+              <Text style={styles.tipTitle}>PLAN AHEAD</Text>
+              <Text style={styles.tipText}>
+                RESEARCH YOUR LAYOVER CITY BEFORE YOU ARRIVE TO MAKE THE MOST OF YOUR TIME.
+              </Text>
+            </View>
+            <View style={styles.tipCard}>
+              <RetroIcon name="clock" size={28} color={Colors.editorial.mint} />
+              <Text style={styles.tipTitle}>TIME MANAGEMENT</Text>
+              <Text style={styles.tipText}>
+                ALWAYS ALLOW EXTRA TIME FOR SECURITY AND TRAVEL BACK TO THE AIRPORT.
+              </Text>
+            </View>
+            <View style={styles.tipCard}>
+              <RetroIcon name="backpack" size={28} color={Colors.editorial.lavender} />
+              <Text style={styles.tipTitle}>TRAVEL LIGHT</Text>
+              <Text style={styles.tipText}>
+                CONSIDER LUGGAGE STORAGE AT THE AIRPORT IF YOU PLAN TO EXPLORE EXTENSIVELY.
+              </Text>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -123,157 +151,240 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.editorial.cream,
   },
   scrollView: {
     flex: 1,
   },
   header: {
     padding: Layout.padding.screen,
-    paddingBottom: Layout.spacing.md,
+    paddingBottom: Layout.spacing.lg,
+    alignItems: 'center',
   },
-  title: {
-    fontSize: Layout.fontSize.xxxl,
-    fontWeight: 'bold',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+  masthead: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    marginBottom: Layout.spacing.sm,
+    letterSpacing: 4,
+    textAlign: 'center',
   },
-  subtitle: {
-    fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+  tagline: {
+    fontSize: Layout.fontSize.sm,
+    color: Colors.editorial.warmGray,
+    textAlign: 'center',
+    letterSpacing: 2,
+    fontWeight: '600',
+    marginBottom: Layout.spacing.md,
+  },
+  headerAccent: {
+    width: 60,
+    height: 4,
+    backgroundColor: Colors.editorial.coral,
+    marginTop: Layout.spacing.sm,
   },
   welcomeSection: {
     paddingHorizontal: Layout.padding.screen,
     marginBottom: Layout.spacing.lg,
+    alignItems: 'center',
   },
   welcomeText: {
     fontSize: Layout.fontSize.lg,
-    color: Colors.textPrimary,
-    fontWeight: '500',
+    color: Colors.editorial.navy,
+    fontWeight: '700',
+    textAlign: 'center',
+    letterSpacing: 1,
   },
   flightCard: {
     margin: Layout.margins.screen,
     padding: Layout.padding.card,
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
-    ...Layout.shadows.md,
+    backgroundColor: Colors.editorial.lightCream,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 8,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Layout.spacing.lg,
+  },
+  cardTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.sm,
   },
   cardTitle: {
     fontSize: Layout.fontSize.lg,
-    fontWeight: '600',
-    color: Colors.textPrimary,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    letterSpacing: 2,
+  },
+  editorialAccent: {
+    width: 40,
+    height: 3,
+    backgroundColor: Colors.editorial.skyBlue,
     marginBottom: Layout.spacing.md,
   },
   flightInfo: {
-    marginBottom: Layout.spacing.md,
+    marginBottom: Layout.spacing.lg,
   },
   flightText: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+    color: Colors.editorial.navy,
+    marginBottom: Layout.spacing.sm,
+    fontWeight: '700',
+    letterSpacing: 1,
   },
   timeText: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
-    marginBottom: Layout.spacing.sm,
+    color: Colors.editorial.warmGray,
+    marginBottom: Layout.spacing.md,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
   timeCalculation: {
-    marginTop: Layout.spacing.sm,
+    marginTop: Layout.spacing.md,
   },
   usableTime: {
     fontSize: Layout.fontSize.md,
-    color: Colors.primary,
-    fontWeight: '500',
-    marginBottom: Layout.spacing.xs,
+    color: Colors.editorial.skyBlue,
+    fontWeight: '900',
+    marginBottom: Layout.spacing.sm,
+    letterSpacing: 1,
   },
   warning: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.warning,
+    color: Colors.editorial.coral,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  warningRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.sm,
     marginBottom: Layout.spacing.xs,
   },
   emptyState: {
     margin: Layout.margins.screen,
     padding: Layout.padding.card,
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
+    backgroundColor: Colors.editorial.lightCream,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
     alignItems: 'center',
-    ...Layout.shadows.md,
-  },
-  emptyTitle: {
-    fontSize: Layout.fontSize.xl,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.sm,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 8,
   },
   emptySubtitle: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+    color: Colors.editorial.warmGray,
     textAlign: 'center',
     marginBottom: Layout.spacing.lg,
-  },
-  button: {
-    backgroundColor: Colors.primary,
-    paddingHorizontal: Layout.spacing.lg,
-    paddingVertical: Layout.spacing.md,
-    borderRadius: Layout.borderRadius.md,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: Colors.white,
-    fontSize: Layout.fontSize.md,
     fontWeight: '600',
+    letterSpacing: 1,
+    lineHeight: 20,
   },
-  quickActions: {
+  primaryButton: {
+    backgroundColor: Colors.editorial.skyBlue,
+    paddingHorizontal: Layout.spacing.xl,
+    paddingVertical: Layout.spacing.lg,
+    borderRadius: 0,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 6,
+  },
+  primaryButtonText: {
+    color: Colors.editorial.navy,
+    fontSize: Layout.fontSize.md,
+    fontWeight: '900',
+    letterSpacing: 2,
+  },
+  actionSection: {
     padding: Layout.padding.screen,
   },
   sectionTitle: {
     fontSize: Layout.fontSize.xl,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.md,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    marginBottom: Layout.spacing.lg,
+    textAlign: 'center',
+    letterSpacing: 3,
   },
   actionGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: Layout.spacing.md,
   },
-  actionCard: {
-    flex: 1,
-    backgroundColor: Colors.white,
+  actionButton: {
+    backgroundColor: Colors.editorial.lightCream,
     padding: Layout.padding.card,
-    borderRadius: Layout.borderRadius.md,
-    marginHorizontal: Layout.spacing.xs,
-    ...Layout.shadows.sm,
+    borderRadius: 0,
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 6,
+    minHeight: 120,
+    justifyContent: 'center',
   },
-  actionTitle: {
-    fontSize: Layout.fontSize.md,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
-  },
-  actionSubtitle: {
+  actionButtonText: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    textAlign: 'center',
+    letterSpacing: 1,
+    marginTop: Layout.spacing.sm,
+    lineHeight: 18,
   },
   tipsSection: {
     padding: Layout.padding.screen,
     paddingTop: Layout.spacing.md,
   },
+  tipsGrid: {
+    gap: Layout.spacing.md,
+  },
   tipCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.editorial.lightCream,
     padding: Layout.padding.card,
-    borderRadius: Layout.borderRadius.md,
-    marginBottom: Layout.spacing.md,
-    ...Layout.shadows.sm,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 4,
+    alignItems: 'center',
   },
   tipTitle: {
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    marginBottom: Layout.spacing.sm,
+    textAlign: 'center',
+    letterSpacing: 2,
   },
   tipText: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
-    lineHeight: Layout.lineHeight.relaxed,
+    color: Colors.editorial.warmGray,
+    lineHeight: 18,
+    textAlign: 'center',
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
 }); 

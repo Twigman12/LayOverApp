@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { useItinerary } from '@/context/ItineraryContext';
 import { Colors } from '@/constants/Colors';
 import { Layout } from '@/constants/Layout';
+import { RetroIcon } from '@/components/RetroIcons';
 
 export default function ItineraryScreen() {
   const router = useRouter();
@@ -16,41 +17,56 @@ export default function ItineraryScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Editorial Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>My Itineraries</Text>
-          <Text style={styles.subtitle}>
-            Plan and manage your layover adventures
-          </Text>
+          <Text style={styles.masthead}>ITINEREADY</Text>
+          <Text style={styles.tagline}>PLAN AND MANAGE YOUR LAYOVER ADVENTURES</Text>
+          <View style={styles.headerAccent} />
         </View>
 
         {state.currentItinerary ? (
           <View style={styles.itineraryCard}>
-            <Text style={styles.cardTitle}>{state.currentItinerary.title}</Text>
+            <View style={styles.cardHeader}>
+              <View style={styles.cardTitleRow}>
+                <RetroIcon name="list" size={24} color={Colors.editorial.deepTeal} />
+                <Text style={styles.cardTitle}>{state.currentItinerary.title.toUpperCase()}</Text>
+              </View>
+              <View style={styles.editorialAccent} />
+            </View>
             <Text style={styles.cardSubtitle}>
-              {state.currentItinerary.items.length} activities planned
+              {state.currentItinerary.items.length} ACTIVITIES PLANNED
             </Text>
             <TouchableOpacity style={styles.viewButton}>
-              <Text style={styles.viewButtonText}>View Details</Text>
+              <Text style={styles.viewButtonText}>VIEW DETAILS</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyTitle}>No Itineraries Yet</Text>
+            <View style={styles.cardHeader}>
+              <View style={styles.cardTitleRow}>
+                <RetroIcon name="list" size={24} color={Colors.editorial.boldOrange} />
+                <Text style={styles.cardTitle}>NO ITINERARIES YET</Text>
+              </View>
+              <View style={styles.editorialAccent} />
+            </View>
             <Text style={styles.emptySubtitle}>
-              Create your first layover itinerary to get started
+              CREATE YOUR FIRST LAYOVER ITINERARY TO GET STARTED
             </Text>
             <TouchableOpacity style={styles.createButton} onPress={handleCreateItinerary}>
-              <Text style={styles.createButtonText}>Create Itinerary</Text>
+              <Text style={styles.createButtonText}>CREATE ITINERARY</Text>
             </TouchableOpacity>
           </View>
         )}
 
         <View style={styles.quickActions}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <Text style={styles.sectionTitle}>QUICK ACTIONS</Text>
           <TouchableOpacity style={styles.actionCard} onPress={handleCreateItinerary}>
-            <Text style={styles.actionTitle}>➕ Create New</Text>
-            <Text style={styles.actionSubtitle}>Start planning a new layover</Text>
+            <View style={styles.actionHeader}>
+              <RetroIcon name="pen" size={24} color={Colors.editorial.coral} />
+              <Text style={styles.actionTitle}>➕ CREATE NEW</Text>
+            </View>
+            <Text style={styles.actionSubtitle}>START PLANNING A NEW LAYOVER</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -61,7 +77,7 @@ export default function ItineraryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.editorial.cream,
   },
   scrollView: {
     flex: 1,
@@ -69,100 +85,171 @@ const styles = StyleSheet.create({
   header: {
     padding: Layout.padding.screen,
     paddingBottom: Layout.spacing.lg,
+    alignItems: 'center',
   },
-  title: {
-    fontSize: Layout.fontSize.xxxl,
-    fontWeight: 'bold',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+  masthead: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    marginBottom: Layout.spacing.sm,
+    letterSpacing: 4,
+    textAlign: 'center',
   },
-  subtitle: {
-    fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+  tagline: {
+    fontSize: Layout.fontSize.sm,
+    color: Colors.editorial.warmGray,
+    textAlign: 'center',
+    letterSpacing: 2,
+    fontWeight: '600',
+    marginBottom: Layout.spacing.md,
+  },
+  headerAccent: {
+    width: 60,
+    height: 4,
+    backgroundColor: Colors.editorial.coral,
+    marginTop: Layout.spacing.sm,
   },
   itineraryCard: {
     margin: Layout.margins.screen,
     padding: Layout.padding.card,
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
-    ...Layout.shadows.md,
+    backgroundColor: Colors.editorial.lightCream,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 8,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Layout.spacing.lg,
+  },
+  cardTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.sm,
   },
   cardTitle: {
     fontSize: Layout.fontSize.lg,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    letterSpacing: 2,
+  },
+  editorialAccent: {
+    width: 40,
+    height: 3,
+    backgroundColor: Colors.editorial.skyBlue,
   },
   cardSubtitle: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
-    marginBottom: Layout.spacing.md,
+    color: Colors.editorial.warmGray,
+    marginBottom: Layout.spacing.lg,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
   viewButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.editorial.skyBlue,
     paddingVertical: Layout.spacing.sm,
-    borderRadius: Layout.borderRadius.md,
+    borderRadius: 0,
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 4,
   },
   viewButtonText: {
-    color: Colors.white,
+    color: Colors.editorial.navy,
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
+    fontWeight: '900',
+    letterSpacing: 2,
   },
   emptyState: {
     margin: Layout.margins.screen,
     padding: Layout.padding.card,
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
+    backgroundColor: Colors.editorial.lightCream,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
     alignItems: 'center',
-    ...Layout.shadows.md,
-  },
-  emptyTitle: {
-    fontSize: Layout.fontSize.xl,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.sm,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 8,
   },
   emptySubtitle: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+    color: Colors.editorial.warmGray,
     textAlign: 'center',
     marginBottom: Layout.spacing.lg,
+    fontWeight: '600',
+    letterSpacing: 1,
+    lineHeight: 20,
   },
   createButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.editorial.skyBlue,
     paddingHorizontal: Layout.spacing.lg,
     paddingVertical: Layout.spacing.md,
-    borderRadius: Layout.borderRadius.md,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 6,
   },
   createButtonText: {
-    color: Colors.white,
+    color: Colors.editorial.navy,
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
+    fontWeight: '900',
+    letterSpacing: 2,
   },
   quickActions: {
     padding: Layout.padding.screen,
   },
   sectionTitle: {
     fontSize: Layout.fontSize.lg,
-    fontWeight: '600',
-    color: Colors.textPrimary,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
     marginBottom: Layout.spacing.md,
+    letterSpacing: 2,
   },
   actionCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.editorial.lightCream,
     padding: Layout.padding.card,
-    borderRadius: Layout.borderRadius.md,
-    ...Layout.shadows.sm,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 4,
+  },
+  actionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.sm,
+    marginBottom: Layout.spacing.sm,
   },
   actionTitle: {
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    letterSpacing: 1,
   },
   actionSubtitle: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
+    color: Colors.editorial.warmGray,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
 }); 

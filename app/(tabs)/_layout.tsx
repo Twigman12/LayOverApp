@@ -8,11 +8,15 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.gray500,
+        tabBarActiveTintColor: Colors.editorial.navy,
+        tabBarInactiveTintColor: Colors.editorial.warmGray,
         tabBarStyle: {
-          backgroundColor: colorScheme === 'dark' ? Colors.gray900 : Colors.white,
-          borderTopColor: Colors.border,
+          backgroundColor: Colors.editorial.lightCream,
+          borderTopColor: Colors.editorial.navy,
+          borderTopWidth: 3,
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 10,
         },
         headerShown: false,
       }}
@@ -20,7 +24,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'HOME',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name="home" color={color} focused={focused} />
           ),
@@ -29,7 +33,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
+          title: 'SEARCH',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name="search" color={color} focused={focused} />
           ),
@@ -38,7 +42,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="itinerary"
         options={{
-          title: 'Itinerary',
+          title: 'TRIPS',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name="list" color={color} focused={focused} />
           ),
@@ -47,7 +51,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: 'PROFILE',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name="person" color={color} focused={focused} />
           ),
@@ -63,15 +67,17 @@ function TabBarIcon({ name, color, focused }: { name: string; color: string; foc
     <View style={{ 
       width: 24, 
       height: 24, 
-      backgroundColor: focused ? color : 'transparent',
-      borderRadius: 4,
+      backgroundColor: focused ? Colors.editorial.skyBlue : 'transparent',
+      borderRadius: 0,
       alignItems: 'center',
       justifyContent: 'center',
+      borderWidth: 0,
     }}>
       <Text style={{
-        color: focused ? Colors.white : color,
-        fontSize: 12,
-        fontWeight: focused ? 'bold' : 'normal',
+        color: focused ? Colors.editorial.navy : color,
+        fontSize: 14,
+        fontWeight: focused ? '900' : '700',
+        letterSpacing: 1,
       }}>
         {name.charAt(0).toUpperCase()}
       </Text>

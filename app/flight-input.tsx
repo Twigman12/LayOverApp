@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useFlight } from '@/context/FlightContext';
+import { FlightInput } from '@/types/flight';
 import { Colors } from '@/constants/Colors';
 import { Layout } from '@/constants/Layout';
-import { FlightInput } from '@/types/flight';
+import { RetroIcon } from '@/components/RetroIcons';
+import { autoFillFlightData } from '@/services/api/flights';
 
 export default function FlightInputScreen() {
   const router = useRouter();
   const { setFlightInput, setError } = useFlight();
   
   const [formData, setFormData] = useState<FlightInput>({
+    flightNumber: '',
     layoverCity: '',
     arrivalTime: '',
     departureTime: '',
     isInternational: false,
     timezone: 'UTC',
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (field: keyof FlightInput, value: string | boolean) => {
     setFormData(prev => ({
@@ -26,134 +31,186 @@ export default function FlightInputScreen() {
     }));
   };
 
+  const handleFlightNumberChange = async (flightNumber: string) => {
+    handleInputChange('flightNumber', flightNumber);
+    
+    // Auto-fill if flight number is at least 3 characters
+    if (flightNumber.length >= 3) {
+      setIsLoading(true);
+      try {
+        const flightData = await autoFillFlightData(flightNumber);
+        if (flightData) {
+          setFormData(prev => ({
+            ...prev,
+            ...flightData,
+          }));
+          Alert.alert('FLIGHT FOUND', 'FLIGHT INFORMATION HAS BEEN AUTO-FILLED');
+        }
+      } catch (error) {
+        console.error('Error auto-filling flight data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
   const handleSubmit = () => {
-    // Basic validation
-    if (!formData.layoverCity || !formData.arrivalTime || !formData.departureTime) {
-      Alert.alert('Error', 'Please fill in all required fields');
+    // Validate required fields
+    if (!formData.flightNumber || !formData.layoverCity || !formData.arrivalTime || !formData.departureTime) {
+      Alert.alert('MISSING INFORMATION', 'PLEASE FILL IN ALL REQUIRED FIELDS');
       return;
     }
 
-    const arrivalTime = new Date(formData.arrivalTime);
-    const departureTime = new Date(formData.departureTime);
+    // Update flight context
+    setFlightInput(formData);
 
-    if (arrivalTime >= departureTime) {
-      Alert.alert('Error', 'Departure time must be after arrival time');
-      return;
-    }
-
-    try {
-      setFlightInput(formData);
-      router.back();
-    } catch (error) {
-      setError('Failed to save flight details');
-    }
+    // Navigate back to home
+    router.back();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
+        {/* Editorial Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Flight Details</Text>
-          <Text style={styles.subtitle}>
-            Enter your layover information to start planning
-          </Text>
+          <Text style={styles.masthead}>ITINEREADY</Text>
+          <Text style={styles.tagline}>ENTER YOUR LAYOVER INFORMATION TO START PLANNING</Text>
+          <View style={styles.headerAccent} />
         </View>
 
-        <View style={styles.form}>
+        <View style={styles.formSection}>
+          {/* Flight Number */}
+          <View style={styles.inputGroup}>
+            <View style={styles.labelRow}>
+              <RetroIcon name="plane" size={20} color={Colors.editorial.navy} />
+              <Text style={styles.label}>FLIGHT NUMBER</Text>
+              {isLoading && (
+                <RetroIcon name="loading" size={16} color={Colors.editorial.skyBlue} />
+              )}
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="ENTER FLIGHT NUMBER (E.G., AA123)"
+              placeholderTextColor={Colors.editorial.warmGray}
+              value={formData.flightNumber}
+              onChangeText={handleFlightNumberChange}
+              autoCapitalize="characters"
+            />
+          </View>
+
           {/* Layover City */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Layover City (Airport Code)</Text>
-            <TouchableOpacity style={styles.input}>
-              <Text style={styles.inputText}>
-                {formData.layoverCity || 'Enter airport code (e.g., JFK, LHR)'}
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.labelRow}>
+              <RetroIcon name="plane" size={20} color={Colors.editorial.navy} />
+              <Text style={styles.label}>LAYOVER CITY (AIRPORT CODE)</Text>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="ENTER AIRPORT CODE (E.G., JFK)"
+              placeholderTextColor={Colors.editorial.warmGray}
+              value={formData.layoverCity}
+              onChangeText={(text) => handleInputChange('layoverCity', text)}
+              autoCapitalize="characters"
+            />
           </View>
 
           {/* Arrival Time */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Arrival Time</Text>
-            <TouchableOpacity style={styles.input}>
-              <Text style={styles.inputText}>
-                {formData.arrivalTime || 'Select arrival time'}
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.labelRow}>
+              <RetroIcon name="clock" size={20} color={Colors.editorial.coral} />
+              <Text style={styles.label}>ARRIVAL TIME</Text>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="ENTER ARRIVAL TIME (E.G., 14:30)"
+              placeholderTextColor={Colors.editorial.warmGray}
+              value={formData.arrivalTime}
+              onChangeText={(text) => handleInputChange('arrivalTime', text)}
+            />
           </View>
 
           {/* Departure Time */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Departure Time</Text>
-            <TouchableOpacity style={styles.input}>
-              <Text style={styles.inputText}>
-                {formData.departureTime || 'Select departure time'}
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.labelRow}>
+              <RetroIcon name="clock" size={20} color={Colors.editorial.coral} />
+              <Text style={styles.label}>DEPARTURE TIME</Text>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="ENTER DEPARTURE TIME (E.G., 16:45)"
+              placeholderTextColor={Colors.editorial.warmGray}
+              value={formData.departureTime}
+              onChangeText={(text) => handleInputChange('departureTime', text)}
+            />
           </View>
 
           {/* International Flight */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Flight Type</Text>
+            <View style={styles.labelRow}>
+              <RetroIcon name="globe" size={20} color={Colors.editorial.navy} />
+              <Text style={styles.label}>FLIGHT TYPE</Text>
+            </View>
             <View style={styles.radioGroup}>
               <TouchableOpacity
                 style={[
-                  styles.radioButton,
-                  !formData.isInternational && styles.radioButtonSelected,
+                  styles.radioOption,
+                  !formData.isInternational && styles.radioOptionSelected,
                 ]}
                 onPress={() => handleInputChange('isInternational', false)}
               >
+                <View style={[
+                  styles.radioButton,
+                  !formData.isInternational && styles.radioButtonSelected,
+                ]}>
+                  <View style={styles.radioButtonInner} />
+                </View>
                 <Text style={[
-                  styles.radioText,
+                  styles.radioLabel,
                   !formData.isInternational && styles.radioTextSelected,
                 ]}>
-                  Domestic
+                  DOMESTIC
                 </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={[
-                  styles.radioButton,
-                  formData.isInternational && styles.radioButtonSelected,
+                  styles.radioOption,
+                  formData.isInternational && styles.radioOptionSelected,
                 ]}
                 onPress={() => handleInputChange('isInternational', true)}
               >
+                <View style={[
+                  styles.radioButton,
+                  formData.isInternational && styles.radioButtonSelected,
+                ]}>
+                  <View style={styles.radioButtonInner} />
+                </View>
                 <Text style={[
-                  styles.radioText,
+                  styles.radioLabel,
                   formData.isInternational && styles.radioTextSelected,
                 ]}>
-                  International
+                  INTERNATIONAL
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          {/* Timezone */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Timezone</Text>
-            <TouchableOpacity style={styles.input}>
-              <Text style={styles.inputText}>
-                {formData.timezone || 'Select timezone'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Submit Button */}
-        <View style={styles.buttonContainer}>
+          {/* Submit Button */}
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Save Flight Details</Text>
+            <Text style={styles.submitButtonText}>SUBMIT FLIGHT DETAILS</Text>
           </TouchableOpacity>
         </View>
 
         {/* Info Section */}
         <View style={styles.infoSection}>
-          <Text style={styles.infoTitle}>💡 Tips</Text>
+          <View style={styles.infoHeader}>
+            <RetroIcon name="lightbulb" size={24} color={Colors.editorial.coral} />
+            <Text style={styles.infoTitle}>TIPS</Text>
+          </View>
           <Text style={styles.infoText}>
-            • Use 3-letter airport codes (e.g., JFK, LHR, CDG)
-          </Text>
-          <Text style={styles.infoText}>
-            • International flights require more security buffer time
-          </Text>
-          <Text style={styles.infoText}>
-            • We'll automatically calculate your usable layover time
+            ENTER YOUR FLIGHT NUMBER TO AUTO-FILL FLIGHT INFORMATION. 
+            THE SYSTEM WILL FETCH LAYOVER CITY, ARRIVAL TIME, AND DEPARTURE TIME 
+            FROM THE AVIATION DATABASE.
           </Text>
         </View>
       </ScrollView>
@@ -164,7 +221,7 @@ export default function FlightInputScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.editorial.cream,
   },
   scrollView: {
     flex: 1,
@@ -172,99 +229,152 @@ const styles = StyleSheet.create({
   header: {
     padding: Layout.padding.screen,
     paddingBottom: Layout.spacing.lg,
+    alignItems: 'center',
   },
-  title: {
-    fontSize: Layout.fontSize.xxxl,
-    fontWeight: 'bold',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+  masthead: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    marginBottom: Layout.spacing.sm,
+    letterSpacing: 4,
+    textAlign: 'center',
   },
-  subtitle: {
-    fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+  tagline: {
+    fontSize: Layout.fontSize.sm,
+    color: Colors.editorial.warmGray,
+    textAlign: 'center',
+    letterSpacing: 2,
+    fontWeight: '600',
+    marginBottom: Layout.spacing.md,
   },
-  form: {
+  headerAccent: {
+    width: 60,
+    height: 4,
+    backgroundColor: Colors.editorial.coral,
+    marginTop: Layout.spacing.sm,
+  },
+  formSection: {
     padding: Layout.padding.screen,
   },
   inputGroup: {
     marginBottom: Layout.spacing.lg,
   },
-  label: {
-    fontSize: Layout.fontSize.md,
-    fontWeight: '600',
-    color: Colors.textPrimary,
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.sm,
     marginBottom: Layout.spacing.sm,
   },
-  input: {
-    backgroundColor: Colors.white,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: Layout.borderRadius.md,
-    padding: Layout.padding.input,
-    minHeight: Layout.heights.input.md,
-    justifyContent: 'center',
-  },
-  inputText: {
+  label: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textPrimary,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    letterSpacing: 1,
+  },
+  input: {
+    backgroundColor: Colors.editorial.lightCream,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
+    borderRadius: 0,
+    padding: Layout.padding.input,
+    fontSize: Layout.fontSize.md,
+    color: Colors.editorial.navy,
+    fontWeight: '600',
+    letterSpacing: 1,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 4,
   },
   radioGroup: {
+    marginTop: Layout.spacing.sm,
+  },
+  radioOption: {
     flexDirection: 'row',
-    gap: Layout.spacing.md,
+    alignItems: 'center',
+    marginBottom: Layout.spacing.sm,
+    backgroundColor: Colors.editorial.lightCream,
+    padding: Layout.padding.sm,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 2,
+  },
+  radioOptionSelected: {
+    backgroundColor: Colors.editorial.skyBlue,
+    borderColor: Colors.editorial.navy,
   },
   radioButton: {
-    flex: 1,
-    backgroundColor: Colors.white,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: Layout.borderRadius.md,
-    padding: Layout.padding.button,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    marginRight: Layout.spacing.sm,
     alignItems: 'center',
     justifyContent: 'center',
   },
   radioButtonSelected: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: Colors.editorial.navy,
   },
-  radioText: {
+  radioButtonInner: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.editorial.lightCream,
+  },
+  radioLabel: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
-    fontWeight: '500',
+    color: Colors.editorial.navy,
+    fontWeight: '700',
+    letterSpacing: 1,
   },
-  radioTextSelected: {
-    color: Colors.white,
+  submitButton: {
+    backgroundColor: Colors.editorial.skyBlue,
+    paddingVertical: Layout.spacing.lg,
+    borderRadius: 0,
+    alignItems: 'center',
+    marginTop: Layout.spacing.xl,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 8,
   },
-  buttonContainer: {
+  submitButtonText: {
+    color: Colors.editorial.navy,
+    fontSize: Layout.fontSize.lg,
+    fontWeight: '900',
+    letterSpacing: 3,
+  },
+  infoSection: {
     padding: Layout.padding.screen,
     paddingTop: Layout.spacing.md,
   },
-  submitButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: Layout.spacing.md,
-    borderRadius: Layout.borderRadius.md,
+  infoHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-  },
-  submitButtonText: {
-    color: Colors.white,
-    fontSize: Layout.fontSize.md,
-    fontWeight: '600',
-  },
-  infoSection: {
-    margin: Layout.margins.screen,
-    padding: Layout.padding.card,
-    backgroundColor: Colors.backgroundSecondary,
-    borderRadius: Layout.borderRadius.md,
+    gap: Layout.spacing.sm,
+    marginBottom: Layout.spacing.md,
   },
   infoTitle: {
     fontSize: Layout.fontSize.lg,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.sm,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    letterSpacing: 2,
   },
   infoText: {
-    fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
-    marginBottom: Layout.spacing.xs,
-    lineHeight: Layout.lineHeight.relaxed,
+    fontSize: Layout.fontSize.md,
+    color: Colors.editorial.warmGray,
+    lineHeight: 24,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
 }); 

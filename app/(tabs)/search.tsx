@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { Layout } from '@/constants/Layout';
+import { RetroIcon } from '@/components/RetroIcons';
 
 export default function SearchScreen() {
   const router = useRouter();
@@ -11,13 +12,13 @@ export default function SearchScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const categories = [
-    { id: 'all', name: 'All', icon: '🏛️' },
-    { id: 'museum', name: 'Museums', icon: '🏛️' },
-    { id: 'park', name: 'Parks', icon: '🌳' },
-    { id: 'restaurant', name: 'Restaurants', icon: '🍽️' },
-    { id: 'shopping', name: 'Shopping', icon: '🛍️' },
-    { id: 'historical', name: 'Historical', icon: '🏛️' },
-    { id: 'entertainment', name: 'Entertainment', icon: '🎭' },
+    { id: 'all', name: 'ALL', icon: 'map' },
+    { id: 'museum', name: 'MUSEUMS', icon: 'book' },
+    { id: 'park', name: 'PARKS', icon: 'tree' },
+    { id: 'restaurant', name: 'RESTAURANTS', icon: 'food' },
+    { id: 'shopping', name: 'SHOPPING', icon: 'star' },
+    { id: 'historical', name: 'HISTORICAL', icon: 'camera' },
+    { id: 'entertainment', name: 'ENTERTAINMENT', icon: 'party' },
   ];
 
   const handleSearch = () => {
@@ -31,13 +32,12 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {/* Header */}
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Editorial Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Discover Places</Text>
-          <Text style={styles.subtitle}>
-            Find amazing attractions near your layover
-          </Text>
+          <Text style={styles.masthead}>ITINEREADY</Text>
+          <Text style={styles.tagline}>FIND AMAZING ATTRACTIONS NEAR YOUR LAYOVER</Text>
+          <View style={styles.headerAccent} />
         </View>
 
         {/* Search Bar */}
@@ -45,20 +45,21 @@ export default function SearchScreen() {
           <View style={styles.searchBar}>
             <TextInput
               style={styles.searchInput}
-              placeholder="Search for places..."
+              placeholder="SEARCH FOR PLACES..."
+              placeholderTextColor={Colors.editorial.warmGray}
               value={searchQuery}
               onChangeText={setSearchQuery}
               onSubmitEditing={handleSearch}
             />
             <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-              <Text style={styles.searchButtonText}>🔍</Text>
+              <RetroIcon name="search" size={20} color={Colors.editorial.lightCream} />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Categories */}
         <View style={styles.categoriesSection}>
-          <Text style={styles.sectionTitle}>Categories</Text>
+          <Text style={styles.sectionTitle}>CATEGORIES</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.categoriesList}>
               {categories.map((category) => (
@@ -70,7 +71,11 @@ export default function SearchScreen() {
                   ]}
                   onPress={() => handleCategorySelect(category.id)}
                 >
-                  <Text style={styles.categoryIcon}>{category.icon}</Text>
+                  <RetroIcon 
+                    name={category.icon} 
+                    size={24} 
+                    color={selectedCategory === category.id ? Colors.editorial.lightCream : Colors.editorial.mutedBlack} 
+                  />
                   <Text style={[
                     styles.categoryText,
                     selectedCategory === category.id && styles.categoryTextSelected,
@@ -85,57 +90,66 @@ export default function SearchScreen() {
 
         {/* Quick Suggestions */}
         <View style={styles.suggestionsSection}>
-          <Text style={styles.sectionTitle}>Popular Near Airports</Text>
+          <Text style={styles.sectionTitle}>POPULAR NEAR AIRPORTS</Text>
           
           <View style={styles.suggestionCard}>
-            <Text style={styles.suggestionTitle}>🏛️ Metropolitan Museum of Art</Text>
-            <Text style={styles.suggestionSubtitle}>Art & Culture • 2 hours</Text>
-            <Text style={styles.suggestionDistance}>~30 min from JFK</Text>
+            <View style={styles.suggestionHeader}>
+              <RetroIcon name="book" size={24} color={Colors.editorial.deepTeal} />
+              <Text style={styles.suggestionTitle}>METROPOLITAN MUSEUM OF ART</Text>
+            </View>
+            <Text style={styles.suggestionSubtitle}>ART & CULTURE • 2 HOURS</Text>
+            <Text style={styles.suggestionDistance}>~30 MIN FROM JFK</Text>
           </View>
 
           <View style={styles.suggestionCard}>
-            <Text style={styles.suggestionTitle}>🌳 Central Park</Text>
-            <Text style={styles.suggestionSubtitle}>Nature & Recreation • 1.5 hours</Text>
-            <Text style={styles.suggestionDistance}>~25 min from JFK</Text>
+            <View style={styles.suggestionHeader}>
+              <RetroIcon name="tree" size={24} color={Colors.editorial.mint} />
+              <Text style={styles.suggestionTitle}>CENTRAL PARK</Text>
+            </View>
+            <Text style={styles.suggestionSubtitle}>NATURE & RECREATION • 1.5 HOURS</Text>
+            <Text style={styles.suggestionDistance}>~25 MIN FROM JFK</Text>
           </View>
 
           <View style={styles.suggestionCard}>
-            <Text style={styles.suggestionTitle}>🍽️ Times Square</Text>
-            <Text style={styles.suggestionSubtitle}>Entertainment • 1 hour</Text>
-            <Text style={styles.suggestionDistance}>~35 min from JFK</Text>
+            <View style={styles.suggestionHeader}>
+              <RetroIcon name="party" size={24} color={Colors.editorial.coral} />
+              <Text style={styles.suggestionTitle}>TIMES SQUARE</Text>
+            </View>
+            <Text style={styles.suggestionSubtitle}>ENTERTAINMENT • 1 HOUR</Text>
+            <Text style={styles.suggestionDistance}>~35 MIN FROM JFK</Text>
           </View>
         </View>
 
         {/* Filters */}
         <View style={styles.filtersSection}>
-          <Text style={styles.sectionTitle}>Filters</Text>
+          <Text style={styles.sectionTitle}>FILTERS</Text>
           
           <View style={styles.filterRow}>
-            <Text style={styles.filterLabel}>Max Distance:</Text>
+            <Text style={styles.filterLabel}>MAX DISTANCE:</Text>
             <View style={styles.filterOptions}>
               <TouchableOpacity style={styles.filterOption}>
-                <Text style={styles.filterOptionText}>5km</Text>
+                <Text style={styles.filterOptionText}>5KM</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.filterOption, styles.filterOptionSelected]}>
-                <Text style={styles.filterOptionText}>10km</Text>
+                <Text style={styles.filterOptionText}>10KM</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.filterOption}>
-                <Text style={styles.filterOptionText}>20km</Text>
+                <Text style={styles.filterOptionText}>20KM</Text>
               </TouchableOpacity>
             </View>
           </View>
 
           <View style={styles.filterRow}>
-            <Text style={styles.filterLabel}>Max Time:</Text>
+            <Text style={styles.filterLabel}>MAX TIME:</Text>
             <View style={styles.filterOptions}>
               <TouchableOpacity style={styles.filterOption}>
-                <Text style={styles.filterOptionText}>30min</Text>
+                <Text style={styles.filterOptionText}>30MIN</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.filterOption, styles.filterOptionSelected]}>
-                <Text style={styles.filterOptionText}>1h</Text>
+                <Text style={styles.filterOptionText}>1H</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.filterOption}>
-                <Text style={styles.filterOptionText}>2h+</Text>
+                <Text style={styles.filterOptionText}>2H+</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -148,24 +162,37 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.editorial.cream,
   },
   scrollView: {
     flex: 1,
   },
   header: {
     padding: Layout.padding.screen,
-    paddingBottom: Layout.spacing.md,
+    paddingBottom: Layout.spacing.lg,
+    alignItems: 'center',
   },
-  title: {
-    fontSize: Layout.fontSize.xxxl,
-    fontWeight: 'bold',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+  masthead: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    marginBottom: Layout.spacing.sm,
+    letterSpacing: 4,
+    textAlign: 'center',
   },
-  subtitle: {
-    fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+  tagline: {
+    fontSize: Layout.fontSize.sm,
+    color: Colors.editorial.warmGray,
+    textAlign: 'center',
+    letterSpacing: 2,
+    fontWeight: '600',
+    marginBottom: Layout.spacing.md,
+  },
+  headerAccent: {
+    width: 60,
+    height: 4,
+    backgroundColor: Colors.editorial.coral,
+    marginTop: Layout.spacing.sm,
   },
   searchSection: {
     paddingHorizontal: Layout.padding.screen,
@@ -173,37 +200,41 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flexDirection: 'row',
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.md,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    backgroundColor: Colors.editorial.lightCream,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
     overflow: 'hidden',
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 6,
   },
   searchInput: {
     flex: 1,
     padding: Layout.padding.input,
     fontSize: Layout.fontSize.md,
-    color: Colors.textPrimary,
+    color: Colors.editorial.navy,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
   searchButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.editorial.skyBlue,
     padding: Layout.padding.input,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  searchButtonText: {
-    fontSize: Layout.fontSize.md,
-    color: Colors.white,
   },
   categoriesSection: {
     marginBottom: Layout.spacing.lg,
   },
   sectionTitle: {
     fontSize: Layout.fontSize.lg,
-    fontWeight: '600',
-    color: Colors.textPrimary,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
     marginBottom: Layout.spacing.md,
     paddingHorizontal: Layout.padding.screen,
+    letterSpacing: 2,
   },
   categoriesList: {
     flexDirection: 'row',
@@ -211,57 +242,75 @@ const styles = StyleSheet.create({
     gap: Layout.spacing.sm,
   },
   categoryButton: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.editorial.lightCream,
     paddingHorizontal: Layout.spacing.md,
     paddingVertical: Layout.spacing.sm,
-    borderRadius: Layout.borderRadius.md,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
     alignItems: 'center',
-    minWidth: 80,
+    minWidth: 100,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 4,
   },
   categoryButtonSelected: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-  categoryIcon: {
-    fontSize: Layout.fontSize.lg,
-    marginBottom: Layout.spacing.xs,
+    backgroundColor: Colors.editorial.skyBlue,
+    borderColor: Colors.editorial.navy,
   },
   categoryText: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
-    fontWeight: '500',
+    color: Colors.editorial.navy,
+    fontWeight: '700',
+    letterSpacing: 1,
+    marginTop: Layout.spacing.xs,
   },
   categoryTextSelected: {
-    color: Colors.white,
+    color: Colors.editorial.navy,
   },
   suggestionsSection: {
     paddingHorizontal: Layout.padding.screen,
     marginBottom: Layout.spacing.lg,
   },
   suggestionCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.editorial.lightCream,
     padding: Layout.padding.card,
-    borderRadius: Layout.borderRadius.md,
+    borderRadius: 0,
     marginBottom: Layout.spacing.md,
-    ...Layout.shadows.sm,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 4,
+  },
+  suggestionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.sm,
+    marginBottom: Layout.spacing.sm,
   },
   suggestionTitle: {
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    letterSpacing: 1,
   },
   suggestionSubtitle: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
+    color: Colors.editorial.warmGray,
     marginBottom: Layout.spacing.xs,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
   suggestionDistance: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.primary,
-    fontWeight: '500',
+    color: Colors.editorial.skyBlue,
+    fontWeight: '700',
+    letterSpacing: 1,
   },
   filtersSection: {
     paddingHorizontal: Layout.padding.screen,
@@ -274,29 +323,36 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    width: 100,
+    fontWeight: '700',
+    color: Colors.editorial.navy,
+    width: 120,
+    letterSpacing: 1,
   },
   filterOptions: {
     flexDirection: 'row',
     gap: Layout.spacing.sm,
   },
   filterOption: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.editorial.lightCream,
     paddingHorizontal: Layout.spacing.md,
     paddingVertical: Layout.spacing.sm,
-    borderRadius: Layout.borderRadius.sm,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 2,
   },
   filterOptionSelected: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: Colors.editorial.skyBlue,
+    borderColor: Colors.editorial.navy,
   },
   filterOptionText: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
-    fontWeight: '500',
+    color: Colors.editorial.navy,
+    fontWeight: '700',
+    letterSpacing: 1,
   },
 }); 

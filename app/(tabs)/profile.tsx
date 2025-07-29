@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUser } from '@/context/UserContext';
 import { Colors } from '@/constants/Colors';
 import { Layout } from '@/constants/Layout';
+import { RetroIcon } from '@/components/RetroIcons';
 
 export default function ProfileScreen() {
   const { state, logout } = useUser();
@@ -16,12 +17,12 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Editorial Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Profile</Text>
-          <Text style={styles.subtitle}>
-            Manage your account and preferences
-          </Text>
+          <Text style={styles.masthead}>ITINEREADY</Text>
+          <Text style={styles.tagline}>MANAGE YOUR ACCOUNT AND PREFERENCES</Text>
+          <View style={styles.headerAccent} />
         </View>
 
         {/* User Info */}
@@ -32,79 +33,97 @@ export default function ProfileScreen() {
                 {state.currentUser.name.charAt(0).toUpperCase()}
               </Text>
             </View>
-            <Text style={styles.userName}>{state.currentUser.name}</Text>
-            <Text style={styles.userEmail}>{state.currentUser.email}</Text>
+            <Text style={styles.userName}>{state.currentUser.name.toUpperCase()}</Text>
+            <Text style={styles.userEmail}>{state.currentUser.email.toUpperCase()}</Text>
           </View>
         ) : (
           <View style={styles.loginPrompt}>
-            <Text style={styles.loginTitle}>Welcome to LayOver</Text>
+            <View style={styles.cardHeader}>
+              <View style={styles.cardTitleRow}>
+                <RetroIcon name="person" size={24} color={Colors.editorial.coral} />
+                <Text style={styles.cardTitle}>WELCOME TO LAYOVER</Text>
+              </View>
+              <View style={styles.editorialAccent} />
+            </View>
             <Text style={styles.loginSubtitle}>
-              Sign in to save your preferences and itineraries
+              SIGN IN TO SAVE YOUR PREFERENCES AND ITINERARIES
             </Text>
             <TouchableOpacity style={styles.loginButton}>
-              <Text style={styles.loginButtonText}>Sign In</Text>
+              <Text style={styles.loginButtonText}>SIGN IN</Text>
             </TouchableOpacity>
           </View>
         )}
 
         {/* Settings */}
         <View style={styles.settingsSection}>
-          <Text style={styles.sectionTitle}>Settings</Text>
+          <Text style={styles.sectionTitle}>SETTINGS</Text>
           
           <View style={styles.settingItem}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingTitle}>Push Notifications</Text>
-              <Text style={styles.settingSubtitle}>Get updates about your flights</Text>
+              <View style={styles.settingHeader}>
+                <RetroIcon name="notification" size={20} color={Colors.editorial.deepTeal} />
+                <Text style={styles.settingTitle}>PUSH NOTIFICATIONS</Text>
+              </View>
+              <Text style={styles.settingSubtitle}>GET UPDATES ABOUT YOUR FLIGHTS</Text>
             </View>
             <Switch
               value={notificationsEnabled}
               onValueChange={setNotificationsEnabled}
-              trackColor={{ false: Colors.gray300, true: Colors.primary }}
-              thumbColor={Colors.white}
+              trackColor={{ false: Colors.editorial.warmGray, true: Colors.editorial.deepTeal }}
+              thumbColor={Colors.editorial.lightCream}
             />
           </View>
 
           <View style={styles.settingItem}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingTitle}>Location Services</Text>
-              <Text style={styles.settingSubtitle}>Find nearby attractions</Text>
+              <View style={styles.settingHeader}>
+                <RetroIcon name="location" size={20} color={Colors.editorial.mint} />
+                <Text style={styles.settingTitle}>LOCATION SERVICES</Text>
+              </View>
+              <Text style={styles.settingSubtitle}>FIND NEARBY ATTRACTIONS</Text>
             </View>
             <Switch
               value={locationEnabled}
               onValueChange={setLocationEnabled}
-              trackColor={{ false: Colors.gray300, true: Colors.primary }}
-              thumbColor={Colors.white}
+              trackColor={{ false: Colors.editorial.warmGray, true: Colors.editorial.mint }}
+              thumbColor={Colors.editorial.lightCream}
             />
           </View>
 
           <TouchableOpacity style={styles.settingItem}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingTitle}>Preferences</Text>
-              <Text style={styles.settingSubtitle}>Customize your experience</Text>
+              <View style={styles.settingHeader}>
+                <RetroIcon name="settings" size={20} color={Colors.editorial.coral} />
+                <Text style={styles.settingTitle}>PREFERENCES</Text>
+              </View>
+              <Text style={styles.settingSubtitle}>CUSTOMIZE YOUR EXPERIENCE</Text>
             </View>
-            <Text style={styles.settingArrow}>›</Text>
+            <RetroIcon name="arrow" size={20} color={Colors.editorial.warmGray} />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.settingItem}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingTitle}>Help & Support</Text>
-              <Text style={styles.settingSubtitle}>Get help and contact us</Text>
+              <View style={styles.settingHeader}>
+                <RetroIcon name="info" size={20} color={Colors.editorial.lavender} />
+                <Text style={styles.settingTitle}>HELP & SUPPORT</Text>
+              </View>
+              <Text style={styles.settingSubtitle}>GET HELP AND CONTACT US</Text>
             </View>
-            <Text style={styles.settingArrow}>›</Text>
+            <RetroIcon name="arrow" size={20} color={Colors.editorial.warmGray} />
           </TouchableOpacity>
         </View>
 
         {/* App Info */}
         <View style={styles.appInfoSection}>
-          <Text style={styles.sectionTitle}>App Information</Text>
+          <Text style={styles.sectionTitle}>APP INFORMATION</Text>
           
           <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Version</Text>
+            <Text style={styles.infoLabel}>VERSION</Text>
             <Text style={styles.infoValue}>1.0.0</Text>
           </View>
 
           <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Build</Text>
+            <Text style={styles.infoLabel}>BUILD</Text>
             <Text style={styles.infoValue}>2024.1.0</Text>
           </View>
         </View>
@@ -113,7 +132,7 @@ export default function ProfileScreen() {
         {state.currentUser && (
           <View style={styles.logoutSection}>
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-              <Text style={styles.logoutButtonText}>Sign Out</Text>
+              <Text style={styles.logoutButtonText}>SIGN OUT</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -125,7 +144,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.editorial.cream,
   },
   scrollView: {
     flex: 1,
@@ -133,116 +152,185 @@ const styles = StyleSheet.create({
   header: {
     padding: Layout.padding.screen,
     paddingBottom: Layout.spacing.lg,
+    alignItems: 'center',
   },
-  title: {
-    fontSize: Layout.fontSize.xxxl,
-    fontWeight: 'bold',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+  masthead: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    marginBottom: Layout.spacing.sm,
+    letterSpacing: 4,
+    textAlign: 'center',
   },
-  subtitle: {
-    fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+  tagline: {
+    fontSize: Layout.fontSize.sm,
+    color: Colors.editorial.warmGray,
+    textAlign: 'center',
+    letterSpacing: 2,
+    fontWeight: '600',
+    marginBottom: Layout.spacing.md,
+  },
+  headerAccent: {
+    width: 60,
+    height: 4,
+    backgroundColor: Colors.editorial.coral,
+    marginTop: Layout.spacing.sm,
   },
   userCard: {
     margin: Layout.margins.screen,
     padding: Layout.padding.card,
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
+    backgroundColor: Colors.editorial.lightCream,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
     alignItems: 'center',
-    ...Layout.shadows.md,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 8,
   },
   avatar: {
     width: 80,
     height: 80,
-    borderRadius: 40,
-    backgroundColor: Colors.primary,
+    borderRadius: 0,
+    backgroundColor: Colors.editorial.navy,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Layout.spacing.md,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
   },
   avatarText: {
     fontSize: Layout.fontSize.xxxl,
-    fontWeight: 'bold',
-    color: Colors.white,
+    fontWeight: '900',
+    color: Colors.editorial.lightCream,
+    letterSpacing: 2,
   },
   userName: {
     fontSize: Layout.fontSize.xl,
-    fontWeight: '600',
-    color: Colors.textPrimary,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
     marginBottom: Layout.spacing.xs,
+    letterSpacing: 2,
   },
   userEmail: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+    color: Colors.editorial.warmGray,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
   loginPrompt: {
     margin: Layout.margins.screen,
     padding: Layout.padding.card,
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
+    backgroundColor: Colors.editorial.lightCream,
+    borderRadius: 0,
+    borderWidth: 3,
+    borderColor: Colors.editorial.navy,
     alignItems: 'center',
-    ...Layout.shadows.md,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 8,
   },
-  loginTitle: {
-    fontSize: Layout.fontSize.xl,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.sm,
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Layout.spacing.lg,
+    width: '100%',
+  },
+  cardTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.sm,
+  },
+  cardTitle: {
+    fontSize: Layout.fontSize.lg,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    letterSpacing: 2,
+  },
+  editorialAccent: {
+    width: 40,
+    height: 3,
+    backgroundColor: Colors.editorial.skyBlue,
   },
   loginSubtitle: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+    color: Colors.editorial.warmGray,
     textAlign: 'center',
     marginBottom: Layout.spacing.lg,
+    fontWeight: '600',
+    letterSpacing: 1,
+    lineHeight: 20,
   },
   loginButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.editorial.skyBlue,
     paddingHorizontal: Layout.spacing.lg,
     paddingVertical: Layout.spacing.md,
-    borderRadius: Layout.borderRadius.md,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 6,
   },
   loginButtonText: {
-    color: Colors.white,
+    color: Colors.editorial.navy,
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
+    fontWeight: '900',
+    letterSpacing: 2,
   },
   settingsSection: {
     padding: Layout.padding.screen,
   },
   sectionTitle: {
     fontSize: Layout.fontSize.lg,
-    fontWeight: '600',
-    color: Colors.textPrimary,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
     marginBottom: Layout.spacing.md,
+    letterSpacing: 2,
   },
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.editorial.lightCream,
     padding: Layout.padding.card,
-    borderRadius: Layout.borderRadius.md,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
     marginBottom: Layout.spacing.sm,
-    ...Layout.shadows.sm,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 4,
   },
   settingInfo: {
     flex: 1,
   },
+  settingHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.sm,
+    marginBottom: Layout.spacing.xs,
+  },
   settingTitle: {
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: Layout.spacing.xs,
+    fontWeight: '900',
+    color: Colors.editorial.navy,
+    letterSpacing: 1,
   },
   settingSubtitle: {
     fontSize: Layout.fontSize.sm,
-    color: Colors.textSecondary,
-  },
-  settingArrow: {
-    fontSize: Layout.fontSize.lg,
-    color: Colors.textSecondary,
-    fontWeight: 'bold',
+    color: Colors.editorial.warmGray,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
   appInfoSection: {
     padding: Layout.padding.screen,
@@ -251,33 +339,51 @@ const styles = StyleSheet.create({
   infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.editorial.lightCream,
     padding: Layout.padding.card,
-    borderRadius: Layout.borderRadius.md,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: Colors.editorial.navy,
     marginBottom: Layout.spacing.sm,
-    ...Layout.shadows.sm,
+    shadowColor: Colors.editorial.navy,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 4,
   },
   infoLabel: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textPrimary,
+    color: Colors.editorial.navy,
+    fontWeight: '700',
+    letterSpacing: 1,
   },
   infoValue: {
     fontSize: Layout.fontSize.md,
-    color: Colors.textSecondary,
+    color: Colors.editorial.warmGray,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
   logoutSection: {
     padding: Layout.padding.screen,
     paddingTop: Layout.spacing.md,
   },
   logoutButton: {
-    backgroundColor: Colors.error,
+    backgroundColor: Colors.editorial.coral,
     paddingVertical: Layout.spacing.md,
-    borderRadius: Layout.borderRadius.md,
+    borderRadius: 0,
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.editorial.coral,
+    shadowColor: Colors.editorial.coral,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 6,
   },
   logoutButtonText: {
-    color: Colors.white,
+    color: Colors.editorial.lightCream,
     fontSize: Layout.fontSize.md,
-    fontWeight: '600',
+    fontWeight: '900',
+    letterSpacing: 2,
   },
 }); 

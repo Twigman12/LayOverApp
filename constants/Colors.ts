@@ -14,6 +14,41 @@ export const Colors = {
   accentLight: '#FBBF24',
   accentDark: '#D97706',
   
+  // Retro Pan Am Airlines Colors
+  retro: {
+    skyBlue: '#87CEEB',
+    skyBlueLight: '#B0E0E6',
+    skyBlueDark: '#4682B4',
+    cream: '#F5F5DC',
+    creamLight: '#FAF0E6',
+    creamDark: '#DEB887',
+    navyBlue: '#000080',
+    navyBlueLight: '#191970',
+    navyBlueDark: '#000033',
+    vintageGold: '#DAA520',
+    vintageGoldLight: '#F4A460',
+    vintageGoldDark: '#B8860B',
+    vintageRed: '#DC143C',
+    vintageRedLight: '#FF6347',
+    vintageRedDark: '#8B0000',
+  },
+  
+  // Vintage Editorial Colors (High Contrast)
+  editorial: {
+    cream: '#FFF8E1',
+    navy: '#003366',
+    skyBlue: '#87CEEB',
+    coral: '#FF6B6B',
+    darkBrown: '#2C1810',
+    warmGray: '#5D4E37',
+    lightCream: '#FFFDF7',
+    deepNavy: '#001F3F',
+    vintageRed: '#D32F2F',
+    softCoral: '#FF8A80',
+    mutedNavy: '#1A365D',
+    paleCream: '#FFFEF9',
+  },
+  
   // Neutral Colors
   white: '#FFFFFF',
   black: '#000000',

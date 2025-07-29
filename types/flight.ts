@@ -56,6 +56,8 @@ export interface Airport {
  * User input for flight search.
  */
 export interface FlightInput {
+  /** Flight number */
+  flightNumber: string;
   /** Layover city code */
   layoverCity: string;
   /** Arrival time as ISO string */
