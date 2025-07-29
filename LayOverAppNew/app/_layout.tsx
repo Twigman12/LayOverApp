@@ -44,6 +44,34 @@ export default function RootLayout() {
                   headerShown: false,
                 }}
               />
+              <Stack.Screen
+                name="flight-input"
+                options={{
+                  title: 'Flight Details',
+                  presentation: 'modal',
+                }}
+              />
+              <Stack.Screen
+                name="poi-details"
+                options={{
+                  title: 'Place Details',
+                  presentation: 'card', // Changed from 'push'
+                }}
+              />
+              <Stack.Screen
+                name="itinerary-builder"
+                options={{
+                  title: 'Build Itinerary',
+                  presentation: 'card', // Changed from 'push'
+                }}
+              />
+              <Stack.Screen
+                name="transportation"
+                options={{
+                  title: 'Transportation',
+                  presentation: 'card', // Changed from 'push'
+                }}
+              />
             </Stack>
             <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
           </ItineraryProvider>

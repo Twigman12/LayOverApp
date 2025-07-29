@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { useColorScheme, View, Text } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 export default function TabLayout() {
@@ -60,21 +60,19 @@ export default function TabLayout() {
 // Simple tab bar icon component (will be replaced with proper icons)
 function TabBarIcon({ name, color, focused }: { name: string; color: string; focused: boolean }) {
   return (
-    <View style={{ 
+    <div style={{ 
       width: 24, 
       height: 24, 
       backgroundColor: focused ? color : 'transparent',
       borderRadius: 4,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      color: focused ? Colors.white : color,
+      fontSize: 12,
+      fontWeight: focused ? 'bold' : 'normal',
     }}>
-      <Text style={{
-        color: focused ? Colors.white : color,
-        fontSize: 12,
-        fontWeight: focused ? 'bold' : 'normal',
-      }}>
-        {name.charAt(0).toUpperCase()}
-      </Text>
-    </View>
+      {name.charAt(0).toUpperCase()}
+    </div>
   );
 } 
